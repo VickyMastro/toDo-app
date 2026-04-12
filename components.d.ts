@@ -11,10 +11,18 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    Header: typeof import('./src/components/HeaderApp.vue')['default']
+    HeaderApp: typeof import('./src/components/HeaderApp.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     ToDoForm: typeof import('./src/components/ToDoForm.vue')['default']
     ToDoList: typeof import('./src/components/ToDoList.vue')['default']
     UApp: typeof import('./node_modules/@nuxt/ui/dist/runtime/components/App.vue')['default']
+    UAvatar: typeof import('./node_modules/@nuxt/ui/dist/runtime/components/Avatar.vue')['default']
+    UButton: typeof import('./node_modules/@nuxt/ui/dist/runtime/components/Button.vue')['default']
+    UDropdownMenu: typeof import('./node_modules/@nuxt/ui/dist/runtime/components/DropdownMenu.vue')['default']
+    UHeader: typeof import('./node_modules/@nuxt/ui/dist/runtime/components/Header.vue')['default']
+    UNavigationMenu: typeof import('./node_modules/@nuxt/ui/dist/runtime/components/NavigationMenu.vue')['default']
+    UTooltip: typeof import('./node_modules/@nuxt/ui/dist/runtime/components/Tooltip.vue')['default']
   }
 }
