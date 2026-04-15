@@ -1,34 +1,50 @@
 import { defineStore } from 'pinia'
 
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL
+const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY
+
+const BASE = `${SUPABASE_URL}/rest/v1/todos`
+
+const headers = {
+  apikey: SUPABASE_KEY,
+  Authorization: `Bearer ${SUPABASE_KEY}`,
+  'Content-Type': 'application/json',
+}
+
 export const useToDosStore = defineStore('toDos', {
   state: () => ({
     toDos: [],
   }),
   actions: {
-    async getToDos(api_url) {
-      const response = await fetch(api_url)
-      this.toDos = await response.json()
+    async getToDos() {
+      const res = await fetch(`${BASE}?select=*&order=created_at.desc`, { headers })
+      this.toDos = await res.json()
+    },
+
+    async addToDo(description) {
+      const res = await fetch(BASE, {
+        method: 'POST',
+        headers: { ...headers, Prefer: 'return=representation' },
+        body: JSON.stringify({ description, completed: false }),
+      })
+      const [todo] = await res.json()
+      this.toDos.unshift(todo)
+    },
+
+    async updateToDo(id, changes) {
+      const res = await fetch(`${BASE}?id=eq.${id}`, {
+        method: 'PATCH',
+        headers: { ...headers, Prefer: 'return=representation' },
+        body: JSON.stringify(changes),
+      })
+      const [updated] = await res.json()
+      const index = this.toDos.findIndex((t) => t.id === id)
+      if (index !== -1) this.toDos[index] = updated
+    },
+
+    async deleteToDo(id) {
+      await fetch(`${BASE}?id=eq.${id}`, { method: 'DELETE', headers })
+      this.toDos = this.toDos.filter((t) => t.id !== id)
     },
   },
 })
-
-/*
-import { storeToRefs } from 'pinia'
-import { useToDosStore } from '../stores/toDosStore.js'
-
-const api_url = 'https://jsonplaceholder.typicode.com/todos/'
-
-const toDosStore = useToDosStore()
-toDosStore.getToDos(api_url)
-
-const { toDos } = storeToRefs(toDosStore)
-</script>
-
-<template>
-  <div v-for="toDo in toDos" :key="toDo.id">
-    <h2>{{ toDo.title }}</h2>
-    <p>{{ toDo.completed }}</p>
-    <p>{{ toDo.userId }}</p>
-  </div>
-</template>
- */
