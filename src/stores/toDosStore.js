@@ -14,6 +14,7 @@ const headers = {
 export const useToDosStore = defineStore('toDos', {
   state: () => ({
     toDos: [],
+    filter: 'all',
   }),
   actions: {
     async getToDos() {
@@ -45,6 +46,13 @@ export const useToDosStore = defineStore('toDos', {
     async deleteToDo(id) {
       await fetch(`${BASE}?id=eq.${id}`, { method: 'DELETE', headers })
       this.toDos = this.toDos.filter((t) => t.id !== id)
+    },
+  },
+  getters: {
+    filteredToDos(state) {
+      if (state.filter === 'pending') return state.toDos.filter((t) => !t.completed)
+      if (state.filter === 'done') return state.toDos.filter((t) => t.completed)
+      return state.toDos
     },
   },
 })
