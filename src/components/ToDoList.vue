@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import { useToDosStore } from '../stores/toDosStore.js'
 
 const toDosStore = useToDosStore()
+/* preguntar a la IA como hacer un loading con esto */
 toDosStore.getToDos()
 
 const editingId = ref(null)
@@ -22,8 +23,8 @@ function editToDo(id) {
 </script>
 
 <template>
-  <div class="grid grid-cols-2 lg:grid-cols-3 gap-3 p-3 max-w-6xl mx-auto">
-    <UCard v-for="todo in toDosStore.filteredToDos" :key="todo.id">
+  <div class="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 p-3 max-w-6xl mx-auto">
+    <UCard v-for="todo in toDosStore.filteredToDos" :key="todo.id" :ui="{ body: '!p-5' }">
       <div class="text-sm text-gray-500 mb-1">
         {{ new Date(todo.created_at).toLocaleDateString('es-AR') }}
       </div>
@@ -32,10 +33,12 @@ function editToDo(id) {
           :model-value="todo.completed"
           @update:model-value="(checked) => toDosStore.updateToDo(todo.id, { completed: checked })"
           :description="editingId === todo.id ? undefined : todo.description"
-          class="flex-1"
-          :class="{ 'opacity-50 line-through': todo.completed }"
+          :class="[
+            editingId !== todo.id ? 'flex-1' : 'shrink-0',
+            { 'opacity-50 line-through': todo.completed },
+          ]"
         />
-        <UInput v-model="todo.description" v-if="editingId === todo.id" />
+        <UInput v-model="todo.description" v-if="editingId === todo.id" class="w-full" />
         <UButton
           v-if="editingId !== todo.id"
           icon="i-lucide-pencil"
