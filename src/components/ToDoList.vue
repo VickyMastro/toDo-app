@@ -1,32 +1,67 @@
 <script setup>
+import { ref } from 'vue'
 import { useToDosStore } from '../stores/toDosStore.js'
 
 const toDosStore = useToDosStore()
 toDosStore.getToDos()
 
+const editingId = ref(null)
+
 function deleteToDo(id) {
   toDosStore.deleteToDo(id)
+}
+
+function confirmEditToDo(id, description) {
+  toDosStore.updateToDo(id, { description: description })
+  editingId.value = null
+}
+
+function editToDo(id) {
+  editingId.value = id
 }
 </script>
 
 <template>
   <div class="grid grid-cols-2 lg:grid-cols-3 gap-3 p-3 max-w-6xl mx-auto">
     <UCard v-for="todo in toDosStore.filteredToDos" :key="todo.id">
+      <div class="text-sm text-gray-500 mb-1">
+        {{ new Date(todo.created_at).toLocaleDateString('es-AR') }}
+      </div>
       <div class="flex items-center gap-3">
         <UCheckbox
           :model-value="todo.completed"
           @update:model-value="(checked) => toDosStore.updateToDo(todo.id, { completed: checked })"
-          :description="todo.description"
+          :description="editingId === todo.id ? undefined : todo.description"
           class="flex-1"
           :class="{ 'opacity-50 line-through': todo.completed }"
         />
+        <UInput v-model="todo.description" v-if="editingId === todo.id" />
         <UButton
-          icon="i-lucide-x"
+          v-if="editingId !== todo.id"
+          icon="i-lucide-pencil"
           color="neutral"
+          variant="ghost"
+          size="sm"
+          aria-label="Editar tarea"
+          @click="editToDo(todo.id)"
+        />
+        <UButton
+          v-if="editingId !== todo.id"
+          icon="i-lucide-x"
+          color="error"
           variant="ghost"
           size="sm"
           aria-label="Eliminar tarea"
           @click="deleteToDo(todo.id)"
+        />
+        <UButton
+          v-if="editingId === todo.id"
+          icon="i-lucide-check"
+          color="success"
+          variant="ghost"
+          size="sm"
+          aria-label="Confirmar edición"
+          @click="confirmEditToDo(todo.id, todo.description)"
         />
       </div>
     </UCard>

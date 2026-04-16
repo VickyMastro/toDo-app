@@ -16,7 +16,7 @@ const items = [
       v-model="toDosStore.filter"
       :items="items"
       :content="false"
-      color="neutral"
+      color="secondary"
       variant="pill"
       class="w-full"
     />
