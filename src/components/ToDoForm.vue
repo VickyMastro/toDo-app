@@ -7,7 +7,6 @@ const description = ref('')
 
 function handleSubmit() {
   toDosStore.addToDo(description.value)
-  console.log(toDosStore.toDos.length)
   description.value = ''
 }
 </script>
@@ -22,7 +21,14 @@ function handleSubmit() {
       color="secondary"
       variant="soft"
     />
-    <UButton type="submit" label="Agregar" color="secondary" variant="soft" @click="handleSubmit" />
+    <UButton
+      type="submit"
+      label="Agregar"
+      color="secondary"
+      variant="soft"
+      :disabled="!description"
+      @click="handleSubmit"
+    />
   </UForm>
 </template>
 
