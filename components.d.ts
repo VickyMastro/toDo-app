@@ -11,13 +11,18 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    CreateUser: typeof import('./src/components/Login.vue')['default']
+    EmailInput: typeof import('./src/components/base/auth/EmailInput.vue')['default']
     Header: typeof import('./src/components/HeaderApp.vue')['default']
     HeaderApp: typeof import('./src/components/HeaderApp.vue')['default']
+    Login: typeof import('./src/components/Login.vue')['default']
+    PasswordInput: typeof import('./src/components/base/auth/PasswordInput.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     ToDoFilter: typeof import('./src/components/ToDoFilter.vue')['default']
     ToDoForm: typeof import('./src/components/ToDoForm.vue')['default']
     ToDoList: typeof import('./src/components/ToDoList.vue')['default']
+    UAlert: typeof import('./node_modules/@nuxt/ui/dist/runtime/components/Alert.vue')['default']
     UApp: typeof import('./node_modules/@nuxt/ui/dist/runtime/components/App.vue')['default']
     UAvatar: typeof import('./node_modules/@nuxt/ui/dist/runtime/components/Avatar.vue')['default']
     UButton: typeof import('./node_modules/@nuxt/ui/dist/runtime/components/Button.vue')['default']
@@ -25,10 +30,15 @@ declare module 'vue' {
     UCheckbox: typeof import('./node_modules/@nuxt/ui/dist/runtime/components/Checkbox.vue')['default']
     UDropdownMenu: typeof import('./node_modules/@nuxt/ui/dist/runtime/components/DropdownMenu.vue')['default']
     UForm: typeof import('./node_modules/@nuxt/ui/dist/runtime/components/Form.vue')['default']
+    UFormField: typeof import('./node_modules/@nuxt/ui/dist/runtime/components/FormField.vue')['default']
     UHeader: typeof import('./node_modules/@nuxt/ui/dist/runtime/components/Header.vue')['default']
     UInput: typeof import('./node_modules/@nuxt/ui/dist/runtime/components/Input.vue')['default']
+    ULink: typeof import('./node_modules/@nuxt/ui/dist/runtime/vue/overrides/vue-router/Link.vue')['default']
     UNavigationMenu: typeof import('./node_modules/@nuxt/ui/dist/runtime/components/NavigationMenu.vue')['default']
+    UserNameInput: typeof import('./src/components/base/auth/UserNameInput.vue')['default']
+    UserProfile: typeof import('./src/components/UserProfile.vue')['default']
     UTabs: typeof import('./node_modules/@nuxt/ui/dist/runtime/components/Tabs.vue')['default']
+    UToast: typeof import('./node_modules/@nuxt/ui/dist/runtime/components/Toast.vue')['default']
     UTooltip: typeof import('./node_modules/@nuxt/ui/dist/runtime/components/Tooltip.vue')['default']
   }
 }

@@ -1,12 +1,14 @@
 <script setup>
+import { useRoute } from 'vue-router'
 import HeaderApp from '@/components/HeaderApp.vue'
+
+const route = useRoute()
 </script>
 
 <template>
   <UApp>
-    <HeaderApp />
+    <UToast />
+    <HeaderApp v-if="!route.meta.hideHeader" />
     <RouterView />
   </UApp>
 </template>
-
-<style scoped></style>
