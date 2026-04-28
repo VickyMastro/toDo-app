@@ -3,9 +3,7 @@ const items = [
   {
     label: 'Mi perfil',
     icon: 'i-lucide-user',
-    onSelect: () => {
-      console.log('Clickeaste Mi perfil')
-    },
+    to: '/user-profile',
   },
   {
     label: 'Cerrar sesión',
