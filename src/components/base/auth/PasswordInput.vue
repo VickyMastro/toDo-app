@@ -1,15 +1,30 @@
 <script setup>
 import { ref } from 'vue'
 
+const props = defineProps({
+  placeholder: {
+    type: String,
+    default: 'Contraseña',
+  },
+  label: {
+    type: String,
+    default: '',
+  },
+  description: {
+    type: String,
+    default: '',
+  },
+})
+
 const password = defineModel({ default: '' })
 const show = ref(false)
 </script>
 
 <template>
-  <UFormField name="password" class="w-full">
+  <UFormField name="password" class="w-full" :label="props.label" :description="props.description">
     <UInput
       v-model="password"
-      placeholder="Contraseña"
+      :placeholder="props.placeholder"
       class="w-full"
       :type="show ? 'text' : 'password'"
       :ui="{
