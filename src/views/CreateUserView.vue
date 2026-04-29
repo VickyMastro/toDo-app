@@ -2,6 +2,7 @@
 import { reactive } from 'vue'
 import { useUserStore } from '@/stores/userStore'
 import { useRouter } from 'vue-router'
+import * as v from 'valibot'
 import EmailInput from '@/components/base/auth/EmailInput.vue'
 import PasswordInput from '@/components/base/auth/PasswordInput.vue'
 import UserNameInput from '@/components/base/auth/UserNameInput.vue'
@@ -10,6 +11,12 @@ const userStore = useUserStore()
 const router = useRouter()
 // eslint-disable-next-line no-undef
 const toast = useToast()
+
+const schema = v.object({
+  username: v.pipe(v.string(), v.minLength(2, 'El nombre debe tener al menos 3 caracteres')),
+  email: v.pipe(v.string(), v.email('Ingresá un correo válido')),
+  password: v.pipe(v.string(), v.minLength(8, 'La contraseña debe tener al menos 8 caracteres')),
+})
 
 const state = reactive({
   username: '',
@@ -21,10 +28,9 @@ async function onSubmit() {
   try {
     await userStore.createUser(state.username, state.email, state.password)
     router.push('/')
-    // eslint-disable-next-line no-unused-vars
   } catch (error) {
     toast.add({
-      title: 'Error al crear usuario',
+      title: error.message,
       description: `Uno de los campos no es válido`,
       color: 'error',
     })
@@ -35,7 +41,7 @@ async function onSubmit() {
 <template>
   <h1 class="text-2xl font-bold text-center mt-10">Crear usuario</h1>
   <div class="flex justify-center items-center mt-10">
-    <UForm :state="state" class="space-y-4" @submit="onSubmit">
+    <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
       <UserNameInput v-model="state.username" />
 
       <EmailInput v-model="state.email" />
@@ -68,7 +74,6 @@ async function onSubmit() {
 </template>
 
 <style>
-/* Hide the password reveal button in Edge */
 ::-ms-reveal {
   display: none;
 }

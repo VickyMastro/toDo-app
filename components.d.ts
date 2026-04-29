@@ -13,6 +13,7 @@ declare module 'vue' {
   export interface GlobalComponents {
     CreateUser: typeof import('./src/components/Login.vue')['default']
     EmailInput: typeof import('./src/components/base/auth/EmailInput.vue')['default']
+    ForgotPasswordModal: typeof import('./src/components/base/auth/ForgotPasswordModal.vue')['default']
     Header: typeof import('./src/components/HeaderApp.vue')['default']
     HeaderApp: typeof import('./src/components/HeaderApp.vue')['default']
     Login: typeof import('./src/components/Login.vue')['default']
@@ -34,6 +35,7 @@ declare module 'vue' {
     UHeader: typeof import('./node_modules/@nuxt/ui/dist/runtime/components/Header.vue')['default']
     UInput: typeof import('./node_modules/@nuxt/ui/dist/runtime/components/Input.vue')['default']
     ULink: typeof import('./node_modules/@nuxt/ui/dist/runtime/vue/overrides/vue-router/Link.vue')['default']
+    UModal: typeof import('./node_modules/@nuxt/ui/dist/runtime/components/Modal.vue')['default']
     UNavigationMenu: typeof import('./node_modules/@nuxt/ui/dist/runtime/components/NavigationMenu.vue')['default']
     UserNameInput: typeof import('./src/components/base/auth/UserNameInput.vue')['default']
     UserProfile: typeof import('./src/components/UserProfile.vue')['default']
