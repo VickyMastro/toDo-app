@@ -1,4 +1,8 @@
 <script setup>
+import { useUserStore } from '@/stores/userStore'
+
+const userStore = useUserStore()
+
 const items = [
   {
     label: 'Mi perfil',
@@ -21,6 +25,9 @@ const items = [
 
 <template>
   <UHeader title="Mis tareas" :toggle="false" :ui="{ right: 'pr-2' }">
+    <template #title>
+      <p>Las tareas de {{ userStore.user.username }}</p>
+    </template>
     <template #right>
       <UDropdownMenu
         :items="items"
