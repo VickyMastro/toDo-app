@@ -1,7 +1,14 @@
 <script setup>
 import { reactive } from 'vue'
+import { useUserStore } from '@/stores/userStore'
+import { useRouter } from 'vue-router'
 import EmailInput from '@/components/base/auth/EmailInput.vue'
 import PasswordInput from '@/components/base/auth/PasswordInput.vue'
+
+const userStore = useUserStore()
+const router = useRouter()
+// eslint-disable-next-line no-undef
+const toast = useToast()
 
 const state = reactive({
   email: '',
@@ -9,7 +16,16 @@ const state = reactive({
 })
 
 async function onSubmit() {
-  console.log(state)
+  try {
+    await userStore.logIn(state.email, state.password)
+    router.push('/')
+  } catch (error) {
+    toast.add({
+      title: error.message,
+      description: `El usuario o contraseña es incorrecto`,
+      color: 'error',
+    })
+  }
 }
 </script>
 
@@ -21,9 +37,7 @@ async function onSubmit() {
 
       <PasswordInput v-model="state.password" />
 
-      <ULink to="/forgot-password" class="text-sm text-neutral-400">
-        ¿Has olvidado la contraseña?
-      </ULink>
+      <ForgotPasswordModal />
 
       <UButton
         type="submit"
