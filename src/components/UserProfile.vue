@@ -30,6 +30,8 @@ onMounted(() => {
 
 async function onSubmit() {
   await userStore.updateUserData(state.username, state.password)
+
+  state.password = ''
 }
 </script>
 
