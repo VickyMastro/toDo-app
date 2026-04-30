@@ -33,9 +33,12 @@ export const useUserStore = defineStore('user', {
       if (res.ok) {
         const data = await res.json()
         this.accessToken = token
-        this.user = { username: data.user_metadata.username }
+        this.user = { id: data.id, email: data.email, username: data.user_metadata.username }
+
+        return this.user
       } else {
         localStorage.removeItem('access_token')
+        throw new Error('estoy en restoreSession')
       }
     },
 
@@ -99,5 +102,33 @@ export const useUserStore = defineStore('user', {
         throw error
       }
     }, */
+
+    async updateUserData(newUsername, newPassword) {
+      try {
+        var payload = { data: { username: newUsername } }
+
+        if (newPassword) {
+          payload.password = newPassword
+        }
+
+        const res = await authFetch(
+          '/user',
+          {
+            method: 'PUT',
+            body: JSON.stringify(payload),
+          },
+          this.accessToken,
+        )
+
+        if (!res.ok) {
+          const error = await res.json()
+          throw new Error(error.error_description)
+        }
+
+        this.user.username = newUsername
+      } catch (error) {
+        throw error
+      }
+    },
   },
 })
