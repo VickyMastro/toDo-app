@@ -3,6 +3,7 @@ import { reactive } from 'vue'
 import { useUserStore } from '@/stores/userStore'
 import { useRouter } from 'vue-router'
 import * as v from 'valibot'
+import { emailField, passwordField, usernameField } from '@/utils/schemas'
 import EmailInput from '@/components/base/auth/EmailInput.vue'
 import PasswordInput from '@/components/base/auth/PasswordInput.vue'
 import UserNameInput from '@/components/base/auth/UserNameInput.vue'
@@ -13,9 +14,9 @@ const router = useRouter()
 const toast = useToast()
 
 const schema = v.object({
-  username: v.pipe(v.string(), v.minLength(2, 'El nombre debe tener al menos 3 caracteres')),
-  email: v.pipe(v.string(), v.email('Ingresá un correo válido')),
-  password: v.pipe(v.string(), v.minLength(8, 'La contraseña debe tener al menos 8 caracteres')),
+  username: usernameField,
+  email: emailField,
+  password: passwordField,
 })
 
 const state = reactive({
