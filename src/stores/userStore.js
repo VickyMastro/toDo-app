@@ -78,11 +78,27 @@ export const useUserStore = defineStore('user', {
 
         this.user = {
           username: data.user.user_metadata.username,
+          email: data.user.email,
         }
         this.accessToken = data.access_token
         localStorage.setItem('access_token', data.access_token)
       } catch (error) {
         throw error
+      }
+    },
+
+    async logOut() {
+      try {
+        const res = await authFetch('/logout', { method: 'POST' }, this.accessToken)
+
+        if (!res.ok) {
+          const error = await res.json()
+          throw new Error(error.error_description)
+        }
+      } finally {
+        this.accessToken = null
+        this.user = { username: '' }
+        localStorage.removeItem('access_token')
       }
     },
 

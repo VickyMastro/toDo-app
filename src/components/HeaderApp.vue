@@ -1,7 +1,9 @@
 <script setup>
 import { useUserStore } from '@/stores/userStore'
+import { useRouter } from 'vue-router'
 
 const userStore = useUserStore()
+const router = useRouter()
 
 const items = [
   {
@@ -12,8 +14,9 @@ const items = [
   {
     label: 'Cerrar sesión',
     color: 'error',
-    onSelect: () => {
-      console.log('Clickeaste Cerrar sesión')
+    onSelect: async () => {
+      await userStore.logOut()
+      router.push('/auth')
     },
     ui: {
       item: 'justify-center',
