@@ -43,48 +43,41 @@ export const useUserStore = defineStore('user', {
     },
 
     async createUser(username, email, password) {
-      try {
-        const res = await authFetch('/signup', {
-          method: 'POST',
-          body: JSON.stringify({ email, password, data: { username } }),
-        })
-        const data = await res.json()
+      const res = await authFetch('/signup', {
+        method: 'POST',
+        body: JSON.stringify({ email, password, data: { username } }),
+      })
+      const data = await res.json()
 
-        if (data.code === 422) {
-          throw new Error('Error al crear el usuario')
-        }
-
-        this.user = {
-          username: data.user.user_metadata.username,
-        }
-        this.accessToken = data.access_token
-        localStorage.setItem('access_token', data.access_token)
-      } catch (error) {
-        throw error
+      if (data.code === 422) {
+        throw new Error('Error al crear el usuario')
       }
+
+      this.user = {
+        username: data.user.user_metadata.username,
+      }
+      this.accessToken = data.access_token
+      localStorage.setItem('access_token', data.access_token)
     },
 
     async logIn(email, password) {
-      try {
-        const res = await authFetch('/token?grant_type=password', {
-          method: 'POST',
-          body: JSON.stringify({ email, password }),
-        })
-        const data = await res.json()
+      const res = await authFetch('/token?grant_type=password', {
+        method: 'POST',
+        body: JSON.stringify({ email, password }),
+      })
+      const data = await res.json()
 
-        if (data.code === 400) {
-          throw new Error('Error al iniciar sesion')
-        }
-
-        this.user = {
-          username: data.user.user_metadata.username,
-          email: data.user.email,
-        }
-        this.accessToken = data.access_token
-        localStorage.setItem('access_token', data.access_token)
-      } catch (error) {
-        throw error
+      if (data.code === 400) {
+        throw new Error('Error al iniciar sesion')
       }
+
+      this.user = {
+        id: data.user.id,
+        username: data.user.user_metadata.username,
+        email: data.user.email,
+      }
+      this.accessToken = data.access_token
+      localStorage.setItem('access_token', data.access_token)
     },
 
     async logOut() {
@@ -103,7 +96,7 @@ export const useUserStore = defineStore('user', {
     },
 
     /* async recoveryPassword(email) {
-      try {
+
         const res = await authFetch('/recover', {
           method: 'POST',
           body: JSON.stringify({ email }),
@@ -114,37 +107,31 @@ export const useUserStore = defineStore('user', {
         if (data.code === 400) {
           throw new Error('Ocurrio un error')
         }
-      } catch (error) {
-        throw error
-      }
+
     }, */
 
     async updateUserData(newUsername, newPassword) {
-      try {
-        var payload = { data: { username: newUsername } }
+      var payload = { data: { username: newUsername } }
 
-        if (newPassword) {
-          payload.password = newPassword
-        }
-
-        const res = await authFetch(
-          '/user',
-          {
-            method: 'PUT',
-            body: JSON.stringify(payload),
-          },
-          this.accessToken,
-        )
-
-        if (!res.ok) {
-          const error = await res.json()
-          throw new Error(error.error_description)
-        }
-
-        this.user.username = newUsername
-      } catch (error) {
-        throw error
+      if (newPassword) {
+        payload.password = newPassword
       }
+
+      const res = await authFetch(
+        '/user',
+        {
+          method: 'PUT',
+          body: JSON.stringify(payload),
+        },
+        this.accessToken,
+      )
+
+      if (!res.ok) {
+        const error = await res.json()
+        throw new Error(error.error_description)
+      }
+
+      this.user.username = newUsername
     },
   },
 })
