@@ -1,13 +1,25 @@
 <script setup>
 import { ref } from 'vue'
 import { useToDosStore } from '../stores/toDosStore.js'
+import { useToast } from '@nuxt/ui/composables'
 
 const toDosStore = useToDosStore()
 const description = ref('')
 
-function handleSubmit() {
-  toDosStore.addToDo(description.value)
-  description.value = ''
+const toast = useToast()
+
+async function handleSubmit() {
+  try {
+    await toDosStore.addToDo(description.value)
+    description.value = ''
+    // eslint-disable-next-line no-unused-vars
+  } catch (error) {
+    toast.add({
+      title: 'Ocurrio un problema',
+      description: `Error al intentar crear la tarea`,
+      color: 'error',
+    })
+  }
 }
 </script>
 

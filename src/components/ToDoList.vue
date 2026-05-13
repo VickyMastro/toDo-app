@@ -3,18 +3,40 @@ import { ref } from 'vue'
 import { useToast } from '@nuxt/ui/composables'
 import { useToDosStore } from '../stores/toDosStore.js'
 
+const toast = useToast()
 const toDosStore = useToDosStore()
+
 /* preguntar a la IA como hacer un loading con esto */
-toDosStore.getToDos()
+async function getToDos() {
+  try {
+    await toDosStore.getToDos()
+    // eslint-disable-next-line no-unused-vars
+  } catch (error) {
+    toast.add({
+      title: 'Ocurrio un problema',
+      description: `Error al intentar obtener las tareas`,
+      color: 'error',
+    })
+  }
+}
+getToDos()
 
 const editingId = ref(null)
-const toast = useToast()
 
-function deleteToDo(id) {
-  toDosStore.deleteToDo(id)
+async function deleteToDo(id) {
+  try {
+    await toDosStore.deleteToDo(id)
+    // eslint-disable-next-line no-unused-vars
+  } catch (error) {
+    toast.add({
+      title: 'Ocurrio un problema',
+      description: `Error al intentar borrar esta tarea`,
+      color: 'error',
+    })
+  }
 }
 
-function confirmEditToDo(id, description) {
+async function confirmEditToDo(id, description) {
   const text = typeof description === 'string' ? description.trim() : ''
   if (!text) {
     toast.add({
@@ -24,7 +46,7 @@ function confirmEditToDo(id, description) {
     })
     return
   }
-  toDosStore.updateToDo(id, { description: text })
+  await toDosStore.updateToDo(id, { description: text })
   editingId.value = null
 }
 
