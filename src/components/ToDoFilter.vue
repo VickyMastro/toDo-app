@@ -20,5 +20,20 @@ const items = [
       variant="pill"
       class="w-full"
     />
+
+    <p
+      v-if="toDosStore.toDos.length === 0 && toDosStore.filter === 'all'"
+      class="col-span-full p-6 text-center text-gray-400"
+    >
+      No creaste tareas hasta ahora
+    </p>
+
+    <p v-if="toDosStore.filter === 'pending'" class="col-span-full p-6 text-center text-gray-400">
+      No tienes tareas pendientes
+    </p>
+
+    <p v-if="toDosStore.filter === 'done'" class="col-span-full p-6 text-center text-gray-400">
+      No tienes tareas completadas
+    </p>
   </div>
 </template>

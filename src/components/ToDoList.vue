@@ -101,9 +101,5 @@ function editToDo(id) {
         />
       </div>
     </UCard>
-
-    <p v-if="toDosStore.toDos.length === 0" class="col-span-full p-6 text-center text-gray-400">
-      No hay tareas pendientes 🎉
-    </p>
   </div>
 </template>
