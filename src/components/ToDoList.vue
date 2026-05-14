@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { useToast } from '@nuxt/ui/composables'
 import { useToDosStore } from '../stores/toDosStore.js'
+import ToDoButton from './base/button/ToDoButton.vue'
 
 const toast = useToast()
 const toDosStore = useToDosStore()
@@ -78,30 +79,23 @@ function editToDo(id) {
           :ui="{ wrapper: 'min-w-0', description: 'break-words' }"
         />
         <UInput v-model="todo.description" v-if="editingId === todo.id" class="w-full" />
-        <UButton
+        <ToDoButton
           v-if="editingId !== todo.id"
           icon="i-lucide-pencil"
-          color="neutral"
-          variant="ghost"
-          size="sm"
           aria-label="Editar tarea"
           @click="editToDo(todo.id)"
         />
-        <UButton
+        <ToDoButton
           v-if="editingId !== todo.id"
           icon="i-lucide-x"
           color="error"
-          variant="ghost"
-          size="sm"
           aria-label="Eliminar tarea"
           @click="deleteToDo(todo.id)"
         />
-        <UButton
+        <ToDoButton
           v-if="editingId === todo.id"
           icon="i-lucide-check"
           color="success"
-          variant="ghost"
-          size="sm"
           aria-label="Confirmar edición"
           @click="confirmEditToDo(todo.id, todo.description)"
         />

@@ -11,6 +11,7 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    Button: typeof import('./src/components/base/button/ToDoButton.vue')['default']
     CreateUser: typeof import('./src/components/Login.vue')['default']
     EmailInput: typeof import('./src/components/base/auth/EmailInput.vue')['default']
     ForgotPasswordModal: typeof import('./src/components/base/auth/ForgotPasswordModal.vue')['default']
@@ -20,6 +21,7 @@ declare module 'vue' {
     PasswordInput: typeof import('./src/components/base/auth/PasswordInput.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    ToDoButton: typeof import('./src/components/base/button/ToDoButton.vue')['default']
     ToDoFilter: typeof import('./src/components/ToDoFilter.vue')['default']
     ToDoForm: typeof import('./src/components/ToDoForm.vue')['default']
     ToDoList: typeof import('./src/components/ToDoList.vue')['default']
