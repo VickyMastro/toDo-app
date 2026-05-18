@@ -5,6 +5,8 @@ import { useRouter } from 'vue-router'
 import EmailInput from '@/components/base/auth/EmailInput.vue'
 import PasswordInput from '@/components/base/auth/PasswordInput.vue'
 import RememberUserCheck from '@/components/base/auth/RememberUserCheck.vue'
+import * as v from 'valibot'
+import { emailField, passwordField } from '@/utils/schemas'
 
 const userStore = useUserStore()
 const router = useRouter()
@@ -15,6 +17,11 @@ const state = reactive({
   email: '',
   password: '',
   rememberUser: '',
+})
+
+const schema = v.object({
+  email: emailField,
+  password: passwordField,
 })
 
 async function onSubmit() {
@@ -34,7 +41,7 @@ async function onSubmit() {
 <template>
   <h1 class="text-2xl font-bold text-center mt-10">Iniciar sesión</h1>
   <div class="flex justify-center items-center mt-10">
-    <UForm :state="state" class="space-y-4" @submit="onSubmit">
+    <UForm :state="state" :schema="schema" class="space-y-4" @submit="onSubmit">
       <EmailInput v-model="state.email" />
 
       <PasswordInput v-model="state.password" />
