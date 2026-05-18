@@ -26,19 +26,36 @@ export const useUserStore = defineStore('user', {
   }),
   actions: {
     async restoreSession() {
-      const token = localStorage.getItem('access_token')
+      const fromLocal = localStorage.getItem('refresh_token')
+      const fromSession = sessionStorage.getItem('refresh_token')
+      const token = fromLocal || fromSession
       if (!token) return
 
-      const res = await authFetch('/user', {}, token)
-      if (res.ok) {
-        const data = await res.json()
-        this.accessToken = token
-        this.user = { id: data.id, email: data.email, username: data.user_metadata.username }
+      const storage = fromLocal ? localStorage : sessionStorage
 
-        return this.user
-      } else {
+      const res = await authFetch('/token?grant_type=refresh_token', {
+        method: 'POST',
+        body: JSON.stringify({ refresh_token: token }),
+      })
+
+      if (!res.ok) {
+        localStorage.removeItem('refresh_token')
         localStorage.removeItem('access_token')
-        throw new Error('estoy en restoreSession')
+        sessionStorage.removeItem('refresh_token')
+        sessionStorage.removeItem('access_token')
+        return
+      }
+
+      const data = await res.json()
+
+      storage.setItem('access_token', data.access_token)
+      storage.setItem('refresh_token', data.refresh_token)
+
+      this.accessToken = data.access_token
+      this.user = {
+        id: data.user.id,
+        email: data.user.email,
+        username: data.user.user_metadata.username,
       }
     },
 
@@ -60,7 +77,7 @@ export const useUserStore = defineStore('user', {
       localStorage.setItem('access_token', data.access_token)
     },
 
-    async logIn(email, password) {
+    async logIn(email, password, rememberUser) {
       const res = await authFetch('/token?grant_type=password', {
         method: 'POST',
         body: JSON.stringify({ email, password }),
@@ -71,13 +88,21 @@ export const useUserStore = defineStore('user', {
         throw new Error('Error al iniciar sesion')
       }
 
+      localStorage.removeItem('access_token')
+      localStorage.removeItem('refresh_token')
+      sessionStorage.removeItem('access_token')
+      sessionStorage.removeItem('refresh_token')
+
+      const storage = rememberUser ? localStorage : sessionStorage
+      storage.setItem('access_token', data.access_token)
+      storage.setItem('refresh_token', data.refresh_token)
+
       this.user = {
         id: data.user.id,
         username: data.user.user_metadata.username,
         email: data.user.email,
       }
       this.accessToken = data.access_token
-      localStorage.setItem('access_token', data.access_token)
     },
 
     async logOut() {
@@ -92,6 +117,9 @@ export const useUserStore = defineStore('user', {
         this.accessToken = null
         this.user = { username: '' }
         localStorage.removeItem('access_token')
+        localStorage.removeItem('refresh_token')
+        sessionStorage.removeItem('access_token')
+        sessionStorage.removeItem('refresh_token')
       }
     },
 

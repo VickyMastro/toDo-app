@@ -19,6 +19,7 @@ declare module 'vue' {
     HeaderApp: typeof import('./src/components/HeaderApp.vue')['default']
     Login: typeof import('./src/components/Login.vue')['default']
     PasswordInput: typeof import('./src/components/base/auth/PasswordInput.vue')['default']
+    RememberUserCheck: typeof import('./src/components/base/auth/RememberUserCheck.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     ToDoButton: typeof import('./src/components/base/button/ToDoButton.vue')['default']

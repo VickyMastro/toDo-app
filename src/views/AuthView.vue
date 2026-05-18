@@ -4,6 +4,7 @@ import { useUserStore } from '@/stores/userStore'
 import { useRouter } from 'vue-router'
 import EmailInput from '@/components/base/auth/EmailInput.vue'
 import PasswordInput from '@/components/base/auth/PasswordInput.vue'
+import RememberUserCheck from '@/components/base/auth/RememberUserCheck.vue'
 
 const userStore = useUserStore()
 const router = useRouter()
@@ -13,11 +14,12 @@ const toast = useToast()
 const state = reactive({
   email: '',
   password: '',
+  rememberUser: '',
 })
 
 async function onSubmit() {
   try {
-    await userStore.logIn(state.email, state.password)
+    await userStore.logIn(state.email, state.password, state.rememberUser)
     router.push('/')
   } catch (error) {
     toast.add({
@@ -36,6 +38,8 @@ async function onSubmit() {
       <EmailInput v-model="state.email" />
 
       <PasswordInput v-model="state.password" />
+
+      <RememberUserCheck v-model="state.rememberUser" />
 
       <ForgotPasswordModal />
 
