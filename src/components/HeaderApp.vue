@@ -1,6 +1,13 @@
 <script setup>
 import { useUserStore } from '@/stores/userStore'
 import { useRouter } from 'vue-router'
+import { useColorMode } from '@vueuse/core'
+
+const colorMode = useColorMode()
+
+function toggleDark() {
+  colorMode.value = colorMode.value === 'dark' ? 'light' : 'dark'
+}
 
 const userStore = useUserStore()
 const router = useRouter()
@@ -32,6 +39,12 @@ const items = [
       <p>Las tareas de {{ userStore.user.username }}</p>
     </template>
     <template #right>
+      <UButton
+        :icon="colorMode === 'dark' ? 'i-lucide-sun' : 'i-lucide-moon'"
+        color="neutral"
+        variant="ghost"
+        @click="toggleDark"
+      />
       <UDropdownMenu
         :items="items"
         :content="{
