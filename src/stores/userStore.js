@@ -71,10 +71,18 @@ export const useUserStore = defineStore('user', {
       }
 
       this.user = {
+        id: data.user.id,
+        email: data.user.email,
         username: data.user.user_metadata.username,
       }
       this.accessToken = data.access_token
+
+      localStorage.removeItem('access_token')
+      localStorage.removeItem('refresh_token')
+      sessionStorage.removeItem('access_token')
+      sessionStorage.removeItem('refresh_token')
       localStorage.setItem('access_token', data.access_token)
+      localStorage.setItem('refresh_token', data.refresh_token)
     },
 
     async logIn(email, password, rememberUser) {
@@ -123,20 +131,36 @@ export const useUserStore = defineStore('user', {
       }
     },
 
-    /* async recoveryPassword(email) {
+    async emailToRecoverPassword(email) {
+      const redirectTo = encodeURIComponent('http://localhost:5173/change-password')
+      const res = await authFetch(`/recover?redirect_to=${redirectTo}`, {
+        method: 'POST',
+        body: JSON.stringify({ email }),
+      })
+      const data = await res.json()
 
-        const res = await authFetch('/recover', {
-          method: 'POST',
-          body: JSON.stringify({ email }),
-        })
-        const data = await res.json()
-        console.log(data)
+      if (!res.ok) {
+        throw new Error('Error al intentar cambiar la contraseña')
+      }
+    },
 
-        if (data.code === 400) {
-          throw new Error('Ocurrio un error')
-        }
+    async recoverPassword(newPassword) {
+      const res = await authFetch(
+        '/user',
+        {
+          method: 'PUT',
+          body: JSON.stringify({ password: newPassword }),
+        },
+        this.accessToken,
+      )
 
-    }, */
+      if (!res.ok) {
+        const error = await res.json()
+        throw new Error(error.error_description)
+      }
+
+      this.accessToken = null
+    },
 
     async updateUserData(newUsername, newPassword) {
       var payload = { data: { username: newUsername } }

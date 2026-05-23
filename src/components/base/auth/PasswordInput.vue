@@ -14,6 +14,10 @@ const props = defineProps({
     type: String,
     default: '',
   },
+  name: {
+    type: String,
+    default: 'password',
+  },
 })
 
 const password = defineModel({ default: '' })
@@ -21,7 +25,12 @@ const show = ref(false)
 </script>
 
 <template>
-  <UFormField name="password" class="w-full" :label="props.label" :description="props.description">
+  <UFormField
+    :name="props.name"
+    class="w-full"
+    :label="props.label"
+    :description="props.description"
+  >
     <UInput
       v-model="password"
       :placeholder="props.placeholder"

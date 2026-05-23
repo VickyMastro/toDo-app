@@ -5,12 +5,18 @@ import HomeView from '@/views/HomeView.vue'
 import AuthView from '@/views/AuthView.vue'
 import CreateUserView from '@/views/CreateUserView.vue'
 import UserProfile from '@/components/UserProfile.vue'
+import ChangePassword from './views/ChangePassword.vue'
 
 const routes = [
   { path: '/', component: HomeView, meta: { requiresAuth: true } },
   { path: '/auth', component: AuthView, meta: { hideHeader: true } },
   { path: '/create-user', component: CreateUserView, meta: { hideHeader: true } },
   { path: '/user-profile', component: UserProfile, meta: { requiresAuth: true } },
+  {
+    path: '/change-password',
+    component: ChangePassword,
+    meta: { hideHeader: true, isRecovery: true },
+  },
 ]
 
 const router = createRouter({
@@ -33,7 +39,7 @@ router.beforeEach(async (to) => {
     return { path: '/auth' }
   }
   // Si ya está logueado e intenta ir al login/registro, redirigir al home
-  if (!to.meta.requiresAuth && userStore.accessToken && to.path !== '/') {
+  if (!to.meta.requiresAuth && !to.meta.isRecovery && userStore.accessToken && to.path !== '/') {
     return { path: '/' }
   }
 })

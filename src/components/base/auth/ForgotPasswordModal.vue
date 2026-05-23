@@ -1,11 +1,11 @@
 <script setup>
 import { ref, reactive } from 'vue'
-/* import { useUserStore } from '@/stores/userStore' */
+import { useUserStore } from '@/stores/userStore'
 import EmailInput from './EmailInput.vue'
 import * as v from 'valibot'
 import { emailField } from '@/utils/schemas'
 
-/* const userStore = useUserStore() */
+const userStore = useUserStore()
 const state = reactive({ email: '' })
 const open = ref(false)
 
@@ -14,12 +14,11 @@ const schema = v.object({ email: emailField })
 // eslint-disable-next-line no-undef
 const toast = useToast()
 
-async function recoveryPasswordButton() {
+async function recoverPasswordButton() {
   try {
-    console.log('Click olvide contraseña')
+    await userStore.emailToRecoverPassword(state.email)
 
-    /* await userStore.recoveryPassword(email.value)
-    open.value = false */
+    open.value = false
   } catch (error) {
     toast.add({
       title: error.message,
@@ -41,7 +40,7 @@ async function recoveryPasswordButton() {
     />
 
     <template #body>
-      <UForm :state="state" :schema="schema" @submit="recoveryPasswordButton">
+      <UForm :state="state" :schema="schema" @submit="recoverPasswordButton">
         <p class="font-semibold text-sm pb-3">Escribe tu mail para reestablecer tu contraseña</p>
         <EmailInput v-model="state.email" />
         <div class="flex justify-end w-full pt-5">
