@@ -3,7 +3,7 @@ import { useUserStore } from '@/stores/userStore'
 import { useRouter } from 'vue-router'
 import { useColorMode } from '@vueuse/core'
 
-const colorMode = useColorMode()
+const colorMode = useColorMode({ initialValue: 'auto' })
 
 function toggleDark() {
   colorMode.value = colorMode.value === 'dark' ? 'light' : 'dark'
