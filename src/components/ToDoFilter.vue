@@ -28,11 +28,17 @@ const items = [
       No creaste tareas hasta ahora
     </p>
 
-    <p v-if="toDosStore.filter === 'pending'" class="col-span-full p-6 text-center text-gray-400">
+    <p
+      v-if="toDosStore.filter === 'pending' && toDosStore.filteredToDos.length === 0"
+      class="col-span-full p-6 text-center text-gray-400"
+    >
       No tienes tareas pendientes
     </p>
 
-    <p v-if="toDosStore.filter === 'done'" class="col-span-full p-6 text-center text-gray-400">
+    <p
+      v-if="toDosStore.filter === 'done' && toDosStore.filteredToDos.length === 0"
+      class="col-span-full p-6 text-center text-gray-400"
+    >
       No tienes tareas completadas
     </p>
   </div>
