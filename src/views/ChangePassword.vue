@@ -1,5 +1,5 @@
 <script setup>
-import { reactive } from 'vue'
+import { ref, reactive } from 'vue'
 import { onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/userStore'
@@ -10,6 +10,7 @@ const userStore = useUserStore()
 const router = useRouter()
 // eslint-disable-next-line no-undef
 const toast = useToast()
+const isLoading = ref(false)
 
 const state = reactive({
   password: '',
@@ -41,6 +42,7 @@ onMounted(() => {
 
 async function recoverPassword() {
   try {
+    isLoading.value = true
     await userStore.recoverPassword(state.password)
 
     toast.add({
@@ -49,18 +51,28 @@ async function recoverPassword() {
       color: 'success',
     })
 
-    setTimeout(() => router.push('/auth'), 5000)
+    setTimeout(() => router.push('/auth'), 3000)
   } catch (error) {
     toast.add({
       title: error.message,
       description: `Ocurrio un error al intenar recuperar la contraseña`,
       color: 'error',
     })
+  } finally {
+    isLoading.value = false
   }
 }
 </script>
 
 <template>
+  <Transition name="fade">
+    <div
+      v-if="isLoading"
+      class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
+    >
+      <UIcon name="i-lucide-loader-circle" class="size-16 text-white animate-spin" />
+    </div>
+  </Transition>
   <h1 class="text-2xl font-bold text-center mt-10">Recuperar contraseña</h1>
   <div class="flex justify-center items-center mt-10">
     <UForm :state="state" :schema="schema" class="space-y-4 w-70" @submit="recoverPassword">
@@ -84,3 +96,14 @@ async function recoverPassword() {
     </UForm>
   </div>
 </template>
+
+<style scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.2s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+</style>

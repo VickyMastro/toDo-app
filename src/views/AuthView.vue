@@ -1,5 +1,5 @@
 <script setup>
-import { reactive } from 'vue'
+import { ref, reactive } from 'vue'
 import { useUserStore } from '@/stores/userStore'
 import { useRouter } from 'vue-router'
 import EmailInput from '@/components/base/auth/EmailInput.vue'
@@ -12,6 +12,7 @@ const userStore = useUserStore()
 const router = useRouter()
 // eslint-disable-next-line no-undef
 const toast = useToast()
+const isLoading = ref(false)
 
 const state = reactive({
   email: '',
@@ -26,6 +27,7 @@ const schema = v.object({
 
 async function onSubmit() {
   try {
+    isLoading.value = true
     await userStore.logIn(state.email, state.password, state.rememberUser)
     router.push('/')
   } catch (error) {
@@ -34,11 +36,21 @@ async function onSubmit() {
       description: `El usuario o contraseña es incorrecto`,
       color: 'error',
     })
+  } finally {
+    isLoading.value = false
   }
 }
 </script>
 
 <template>
+  <Transition name="fade">
+    <div
+      v-if="isLoading"
+      class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
+    >
+      <UIcon name="i-lucide-loader-circle" class="size-16 text-white animate-spin" />
+    </div>
+  </Transition>
   <h1 class="text-2xl font-bold text-center mt-10">Iniciar sesión</h1>
   <div class="flex justify-center items-center mt-10">
     <UForm :state="state" :schema="schema" class="space-y-4" @submit="onSubmit">
@@ -74,3 +86,14 @@ async function onSubmit() {
     </UForm>
   </div>
 </template>
+
+<style scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.2s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+</style>

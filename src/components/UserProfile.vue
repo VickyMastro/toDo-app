@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, reactive } from 'vue'
+import { onMounted, ref, reactive } from 'vue'
 import { useUserStore } from '@/stores/userStore'
 import * as v from 'valibot'
 import { passwordField, usernameField } from '@/utils/schemas'
@@ -8,6 +8,9 @@ import PasswordInput from './base/auth/PasswordInput.vue'
 import UserNameInput from './base/auth/UserNameInput.vue'
 
 const userStore = useUserStore()
+const isLoading = ref(false)
+// eslint-disable-next-line no-undef
+const toast = useToast()
 
 const schema = v.object({
   username: usernameField,
@@ -29,9 +32,20 @@ onMounted(() => {
 })
 
 async function onSubmit() {
-  await userStore.updateUserData(state.username, state.password)
+  try {
+    isLoading.value = true
+    await userStore.updateUserData(state.username, state.password)
 
-  state.password = ''
+    state.password = ''
+  } catch (error) {
+    toast.add({
+      title: error.message,
+      description: `No pudimos editar tu perfil`,
+      color: 'error',
+    })
+  } finally {
+    isLoading.value = false
+  }
 }
 </script>
 
@@ -60,7 +74,7 @@ async function onSubmit() {
         placeholder="Nueva contraseña"
       />
 
-      <UButton type="submit" label="Guardar cambios" class="self-end" />
+      <UButton type="submit" label="Guardar cambios" class="self-end" :loading="isLoading" />
     </UForm>
   </UCard>
 </template>

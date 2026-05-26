@@ -1,5 +1,5 @@
 <script setup>
-import { reactive } from 'vue'
+import { ref, reactive } from 'vue'
 import { useUserStore } from '@/stores/userStore'
 import { useRouter } from 'vue-router'
 import * as v from 'valibot'
@@ -12,6 +12,7 @@ const userStore = useUserStore()
 const router = useRouter()
 // eslint-disable-next-line no-undef
 const toast = useToast()
+const isLoading = ref(false)
 
 const schema = v.object({
   username: usernameField,
@@ -27,6 +28,7 @@ const state = reactive({
 
 async function onSubmit() {
   try {
+    isLoading.value = true
     await userStore.createUser(state.username, state.email, state.password)
     router.push('/')
   } catch (error) {
@@ -35,11 +37,21 @@ async function onSubmit() {
       description: `Uno de los campos no es válido`,
       color: 'error',
     })
+  } finally {
+    isLoading.value = false
   }
 }
 </script>
 
 <template>
+  <Transition name="fade">
+    <div
+      v-if="isLoading"
+      class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
+    >
+      <UIcon name="i-lucide-loader-circle" class="size-16 text-white animate-spin" />
+    </div>
+  </Transition>
   <h1 class="text-2xl font-bold text-center mt-10">Crear usuario</h1>
   <div class="flex justify-center items-center mt-10">
     <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
@@ -77,5 +89,13 @@ async function onSubmit() {
 <style>
 ::-ms-reveal {
   display: none;
+}
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.2s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>
