@@ -5,6 +5,7 @@ import { useToast } from '@nuxt/ui/composables'
 
 const toDosStore = useToDosStore()
 const description = ref('')
+const maxLength = 50
 
 const toast = useToast()
 
@@ -29,10 +30,22 @@ async function handleSubmit() {
       v-model="description"
       type="text"
       placeholder="Escribe aqui la tarea"
+      :maxlength="maxLength"
       :autofocus="false"
       color="secondary"
       variant="soft"
-    />
+    >
+      <template #trailing>
+        <div
+          id="character-count"
+          class="text-xs text-muted tabular-nums"
+          aria-live="polite"
+          role="status"
+        >
+          {{ description?.length }}/{{ maxLength }}
+        </div>
+      </template>
+    </UInput>
     <UButton
       type="submit"
       label="Agregar"
