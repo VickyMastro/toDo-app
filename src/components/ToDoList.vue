@@ -7,7 +7,6 @@ import ToDoButton from './base/button/ToDoButton.vue'
 const toast = useToast()
 const toDosStore = useToDosStore()
 
-/* preguntar a la IA como hacer un loading con esto */
 async function getToDos() {
   try {
     await toDosStore.getToDos()
